@@ -12,13 +12,13 @@ import lombok.Data;
 @Entity
 @Table(name = "books")
 public class Book {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String title;
-	private String author;
-	private String isbn;
-	private BigDecimal price;
-	private String descripton;
-	private String coverImage;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+    private String author;
+    private String isbn;
+    private BigDecimal price;
+    private String descripton;
+    private String coverImage;
 }
