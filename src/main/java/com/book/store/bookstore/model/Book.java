@@ -6,9 +6,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "books")
 public class Book {
@@ -19,6 +25,6 @@ public class Book {
     private String author;
     private String isbn;
     private BigDecimal price;
-    private String descripton;
+    private String description;
     private String coverImage;
 }
