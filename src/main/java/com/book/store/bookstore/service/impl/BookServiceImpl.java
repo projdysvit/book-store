@@ -1,40 +1,41 @@
 package com.book.store.bookstore.service.impl;
 
-import com.book.store.bookstore.dto.mapper.RequestDtoMapper;
 import com.book.store.bookstore.dto.request.book.CreateBookRequestDto;
+import com.book.store.bookstore.dto.response.book.BookDto;
 import com.book.store.bookstore.exception.EntityNotFoundException;
+import com.book.store.bookstore.mapper.BookMapper;
 import com.book.store.bookstore.model.Book;
 import com.book.store.bookstore.repository.BookRepository;
 import com.book.store.bookstore.service.BookService;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
-    private BookRepository bookRepository;
-    private RequestDtoMapper<CreateBookRequestDto, Book> requestDtoMapper;
+    private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
-    public BookServiceImpl(BookRepository bookRepository,
-                            RequestDtoMapper<CreateBookRequestDto, Book> requestDtoMapper) {
-        this.bookRepository = bookRepository;
-        this.requestDtoMapper = requestDtoMapper;
+    @Override
+    public BookDto save(CreateBookRequestDto bookDto) {
+        return bookMapper.toDto(bookRepository.save(bookMapper.toModel(bookDto)));
     }
 
     @Override
-    public Book save(CreateBookRequestDto dto) {
-        Book book = requestDtoMapper.toModel(dto);
-        return bookRepository.save(book);
+    public List<BookDto> findAll() {
+        return bookRepository.findAll()
+                                .stream()
+                                .map(book -> bookMapper.toDto(book))
+                                .toList();
     }
 
     @Override
-    public List<Book> findAll() {
-        return bookRepository.findAll();
-    }
-
-    @Override
-    public Book findById(Long id) {
-        return bookRepository.findById(id).orElseThrow(
-            () -> new EntityNotFoundException("Book with id " + id + " not found.")
+    public BookDto findById(Long id) {
+        Book book = bookRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Book with id " + id + " not found.")
         );
+
+        return bookMapper.toDto(book);
     }
 }
