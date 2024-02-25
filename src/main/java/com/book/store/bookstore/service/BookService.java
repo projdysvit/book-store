@@ -5,7 +5,7 @@ import com.book.store.bookstore.dto.response.book.BookDto;
 import java.util.List;
 
 public interface BookService {
-    BookDto save(BookRequestDto bookDto);
+    BookDto create(BookRequestDto bookDto);
 
     BookDto update(Long id, BookRequestDto bookDto);
 

@@ -24,7 +24,7 @@ public class BookController {
 
     @PostMapping
     public BookDto createBook(@RequestBody BookRequestDto bookDto) {
-        return bookService.save(bookDto);
+        return bookService.create(bookDto);
     }
 
     @PutMapping("/{id}")
