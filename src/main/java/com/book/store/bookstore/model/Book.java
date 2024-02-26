@@ -11,7 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 
 @Data
 @NoArgsConstructor
@@ -19,7 +19,7 @@ import org.hibernate.annotations.Where;
 @Builder
 @Entity
 @SQLDelete(sql = "UPDATE books SET is_deleted = TRUE WHERE id = ?")
-@Where(clause = "is_deleted = FALSE")
+@SQLRestriction("is_deleted = FALSE")
 @Table(name = "books")
 public class Book {
     @Id
