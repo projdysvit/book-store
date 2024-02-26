@@ -10,12 +10,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
+@SQLDelete(sql = "UPDATE books SET is_deleted = TRUE WHERE id = ?")
+@Where(clause = "is_deleted = FALSE")
 @Table(name = "books")
 public class Book {
     @Id
@@ -27,4 +31,5 @@ public class Book {
     private BigDecimal price;
     private String description;
     private String coverImage;
+    private boolean isDeleted;
 }
