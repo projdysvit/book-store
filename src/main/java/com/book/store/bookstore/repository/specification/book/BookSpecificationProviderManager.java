@@ -17,12 +17,10 @@ public class BookSpecificationProviderManager
     @Override
     public SpecificationProvider<Book> getSpecificationProvider(String key) {
         return specificationProviders.stream()
-                .filter(p -> p.getKey().equals(key))
+                .filter(provider -> provider.getKey().equals(key))
                 .findFirst()
                 .orElseThrow(
                     () -> new IncorrectSpecificationKeyException(
-                            "Unhandled specification key " + key
-                        )
-                );
+                                "Unhandled specification key " + key));
     }
 }

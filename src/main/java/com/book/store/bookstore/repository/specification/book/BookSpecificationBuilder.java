@@ -4,6 +4,9 @@ import com.book.store.bookstore.dto.request.book.BookSearchParameters;
 import com.book.store.bookstore.model.Book;
 import com.book.store.bookstore.repository.specification.SpecificationBuilder;
 import com.book.store.bookstore.repository.specification.SpecificationProviderManager;
+import com.book.store.bookstore.repository.specification.book.field.AuthorSpecification;
+import com.book.store.bookstore.repository.specification.book.field.IsbnSpecification;
+import com.book.store.bookstore.repository.specification.book.field.TitleSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
@@ -16,9 +19,10 @@ public class BookSpecificationBuilder implements SpecificationBuilder<Book, Book
     @Override
     public Specification<Book> build(BookSearchParameters searchParams) {
         Specification<Book> spec = Specification.where(null);
-        spec = checkSpecification(spec, searchParams.titles(), "title");
-        spec = checkSpecification(spec, searchParams.authors(), "author");
-        spec = checkSpecification(spec, searchParams.isbns(), "isbn");
+        spec = checkSpecification(spec, searchParams.titles(), new TitleSpecification().getKey());
+        spec = checkSpecification(spec, searchParams.authors(), 
+                                            new AuthorSpecification().getKey());
+        spec = checkSpecification(spec, searchParams.isbns(), new IsbnSpecification().getKey());
         return spec;
     }
 
