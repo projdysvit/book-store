@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,7 +40,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler(value = IncorrectSpecificationKeyException.class)
     public ResponseEntity<Object> handleIncorrectSpecificationKeyException(
-        IncorrectSpecificationKeyException ex
+            IncorrectSpecificationKeyException ex
     ) {
         return new ResponseEntity<>(
             getResponseBody(HttpStatus.BAD_REQUEST, List.of(ex.getMessage())),

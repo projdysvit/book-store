@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 public class PasswordMatchValidator 
-implements ConstraintValidator<PasswordMatch, UserRegistrationRequestDto> {
+        implements ConstraintValidator<PasswordMatch, UserRegistrationRequestDto> {
     @Override
     public boolean isValid(UserRegistrationRequestDto requestDto, 
                             ConstraintValidatorContext context) {
