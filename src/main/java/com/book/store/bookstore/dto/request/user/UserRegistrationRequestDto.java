@@ -7,20 +7,20 @@ import jakarta.validation.constraints.Size;
 
 @PasswordMatch
 public record UserRegistrationRequestDto(
-    @Email
-    @NotBlank
-    String email,
-    @NotBlank
-    @Size(min = 8)
-    String password,
-    @NotBlank
-    @Size(min = 8)
-    String repeatPassword,
-    @NotBlank
-    String firstName,
-    @NotBlank
-    String lastName,
-    @NotBlank
-    String shippingAddress
+        @Email
+        @NotBlank
+        String email,
+        @NotBlank
+        @Size(min = 8)
+        String password,
+        @NotBlank
+        @Size(min = 8)
+        String repeatPassword,
+        @NotBlank
+        String firstName,
+        @NotBlank
+        String lastName,
+        @NotBlank
+        String shippingAddress
 ) {
 }

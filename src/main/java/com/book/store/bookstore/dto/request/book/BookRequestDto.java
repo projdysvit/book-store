@@ -6,18 +6,18 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public record BookRequestDto(
-    @NotBlank
-    String title,
-    @NotBlank
-    String author,
-    @NotBlank
-    String isbn,
-    @NotNull
-    @Min(0)
-    BigDecimal price,
-    @NotBlank
-    String description,
-    @NotBlank
-    String coverImage
+        @NotBlank
+        String title,
+        @NotBlank
+        String author,
+        @NotBlank
+        String isbn,
+        @NotNull
+        @Min(0)
+        BigDecimal price,
+        @NotBlank
+        String description,
+        @NotBlank
+        String coverImage
 ) {
 }
