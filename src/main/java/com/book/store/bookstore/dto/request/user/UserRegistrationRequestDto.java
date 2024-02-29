@@ -4,24 +4,23 @@ import com.book.store.bookstore.util.validation.user.PasswordMatch;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
 
-@Data
 @PasswordMatch
-public class UserRegistrationRequestDto {
+public record UserRegistrationRequestDto(
     @Email
     @NotBlank
-    private String email;
+    String email,
     @NotBlank
     @Size(min = 8)
-    private String password;
+    String password,
     @NotBlank
     @Size(min = 8)
-    private String repeatPassword;
+    String repeatPassword,
     @NotBlank
-    private String firstName;
+    String firstName,
     @NotBlank
-    private String lastName;
+    String lastName,
     @NotBlank
-    private String shippingAddress;
+    String shippingAddress
+) {
 }
