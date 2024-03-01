@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: fill-admin-roles
+      author: riki
+      changes:
+        - sql:
+            dbms: postgresql
+            sql: | 
+              INSERT INTO users_roles (user_id, role_id)
+              SELECT id, 1 
+              FROM users
+              WHERE email = 'admin@example.com'
+        - sql:
+            dbms: postgresql
+            sql: |
+              INSERT INTO users_roles (user_id, role_id)
+              SELECT id, 2 
+              FROM users
+              WHERE email = 'admin@example.com'
