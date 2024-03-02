@@ -2,7 +2,7 @@ package com.book.store.bookstore.controller;
 
 import com.book.store.bookstore.dto.request.book.BookRequestDto;
 import com.book.store.bookstore.dto.request.book.BookSearchParameters;
-import com.book.store.bookstore.dto.response.book.BookDto;
+import com.book.store.bookstore.dto.response.book.BookResponseDto;
 import com.book.store.bookstore.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,14 +32,14 @@ public class BookController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Create a new book")
-    public BookDto createBook(@RequestBody @Valid BookRequestDto bookDto) {
+    public BookResponseDto createBook(@RequestBody @Valid BookRequestDto bookDto) {
         return bookService.create(bookDto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Update an exist book")
-    public BookDto update(@PathVariable Long id, @RequestBody BookRequestDto bookDto) {
+    public BookResponseDto update(@PathVariable Long id, @RequestBody BookRequestDto bookDto) {
         return bookService.update(id, bookDto);
     }
     
@@ -57,14 +57,14 @@ public class BookController {
             summary = "Get all books",
             description = "Get all non-deleted books with pagination"
     )
-    public List<BookDto> getAll(Pageable pageable) {
+    public List<BookResponseDto> getAll(Pageable pageable) {
         return bookService.findAll(pageable);
     }
     
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Get a book by id")
-    public BookDto getBookById(@PathVariable Long id) {
+    public BookResponseDto getBookById(@PathVariable Long id) {
         return bookService.findById(id);
     }
 
@@ -74,7 +74,7 @@ public class BookController {
             summary = "Get all books",
             description = "Get all non-deleted books with pagination and search params"
     )
-    public List<BookDto> search(Pageable pageable, BookSearchParameters params) {
+    public List<BookResponseDto> search(Pageable pageable, BookSearchParameters params) {
         return bookService.search(pageable, params);
     }
 }
