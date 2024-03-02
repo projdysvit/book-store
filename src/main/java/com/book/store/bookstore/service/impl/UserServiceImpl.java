@@ -35,7 +35,8 @@ public class UserServiceImpl implements UserService {
         newUser.setRoles(Set.of(
                 roleRepository.findByName(Role.RoleName.ROLE_USER)
                     .orElseThrow(
-                        () -> new EntityNotFoundException("Can't get arole.")
+                        () -> new EntityNotFoundException("Role with name \'" 
+                            + Role.RoleName.ROLE_USER.name() + "\' wasn\'t found")
                     )
             )
         );
