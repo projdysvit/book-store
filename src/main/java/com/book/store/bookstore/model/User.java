@@ -44,6 +44,7 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+    @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
 
     @Override
