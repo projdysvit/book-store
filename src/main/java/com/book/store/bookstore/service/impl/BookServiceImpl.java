@@ -2,6 +2,7 @@ package com.book.store.bookstore.service.impl;
 
 import com.book.store.bookstore.dto.request.book.BookRequestDto;
 import com.book.store.bookstore.dto.request.book.BookSearchParameters;
+import com.book.store.bookstore.dto.request.book.CategoryIdsDto;
 import com.book.store.bookstore.dto.response.book.BookResponseDto;
 import com.book.store.bookstore.dto.response.book.BookWithoutCategoriesResponseDto;
 import com.book.store.bookstore.exception.EntityNotFoundException;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ public class BookServiceImpl implements BookService {
     private final BookSpecificationBuilder specificationBuilder;
 
     @Override
+    @Transactional
     public BookResponseDto create(BookRequestDto bookDto) {
         Book newBook = bookMapper.toModel(bookDto);
         newBook.setCategories(
@@ -34,7 +37,7 @@ public class BookServiceImpl implements BookService {
                 categoryRepository.findAllById(
                     bookDto.categoryIds()
                             .stream()
-                            .map(categoryId -> categoryId.id())
+                            .map(CategoryIdsDto::id)
                             .collect(Collectors.toSet())
                 )
             )
@@ -44,10 +47,9 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public BookResponseDto update(Long id, BookRequestDto bookDto) {
-        if (!bookRepository.existsById(id)) {
-            throw new EntityNotFoundException("Book with id " + id + " not found.");
-        }
+        checkIfExists(id);
         
         Book book = bookMapper.toModel(bookDto);
         book.setId(id);
@@ -56,7 +58,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
+        checkIfExists(id);
+
         bookRepository.deleteById(id);
     }
 
@@ -91,5 +96,11 @@ public class BookServiceImpl implements BookService {
                                 .stream()
                                 .map(bookMapper::toDtoWithoutCategories)
                                 .toList();
+    }
+
+    private void checkIfExists(Long id) {
+        if (!bookRepository.existsById(id)) {
+            throw new EntityNotFoundException("Book with id " + id + " not found.");
+        }
     }
 }

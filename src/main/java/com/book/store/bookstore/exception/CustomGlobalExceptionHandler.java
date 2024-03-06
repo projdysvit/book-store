@@ -56,6 +56,16 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         );
     }
 
+    @ExceptionHandler(value = ShoppingCartForbiddenException.class)
+    public ResponseEntity<Object> handleShoppingCartForbiddenException(
+            ShoppingCartForbiddenException ex
+    ) {
+        return new ResponseEntity<>(
+            getResponseBody(HttpStatus.FORBIDDEN, List.of(ex.getMessage())),
+            HttpStatus.FORBIDDEN
+        );
+    }
+
     private Map<String, Object> getResponseBody(HttpStatus httpStatus, List<String> errors) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());

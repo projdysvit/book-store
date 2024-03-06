@@ -11,6 +11,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,10 +42,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryResponseDto update(Long id, CategoryRequestDto requestDto) {
-        if (categoryRepository.existsById(id)) {
-            throw new EntityNotFoundException("Category with id '" + id + "' not found");
-        }
+        checkIfExists(id);
 
         Category newCategory = categoryMapper.toModel(requestDto);
         newCategory.setId(id);
@@ -54,6 +54,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteById(Long id) {
+        checkIfExists(id);
+        
         categoryRepository.deleteById(id);
+    }
+
+    private void checkIfExists(Long id) {
+        if (categoryRepository.existsById(id)) {
+            throw new EntityNotFoundException("Category with id '" + id + "' not found");
+        }
     }
 }

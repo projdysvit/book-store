@@ -12,4 +12,8 @@ databaseChangeLog:
   - includeAll:
       path: db/changelog/changes/users-roles
   - includeAll:
+      path: db/changelog/changes/shopping-carts
+  - includeAll:
+      path: db/changelog/changes/cart-items
+  - includeAll:
       path: db/changelog/changes/development

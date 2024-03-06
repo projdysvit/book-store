@@ -9,21 +9,25 @@ import com.book.store.bookstore.model.Role;
 import com.book.store.bookstore.model.User;
 import com.book.store.bookstore.repository.RoleRepository;
 import com.book.store.bookstore.repository.UserRepository;
+import com.book.store.bookstore.service.ShoppingCartService;
 import com.book.store.bookstore.service.UserService;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final ShoppingCartService shoppingCartService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public UserResponseDto create(UserRegistrationRequestDto requestDto) {
         if (userRepository.findByEmail(requestDto.email()).isPresent()) {
             throw new RegistrationException("User with that email already exists: "
@@ -35,12 +39,16 @@ public class UserServiceImpl implements UserService {
         newUser.setRoles(Set.of(
                 roleRepository.findByName(Role.RoleName.ROLE_USER)
                     .orElseThrow(
-                        () -> new EntityNotFoundException("Role with name \'" 
-                            + Role.RoleName.ROLE_USER.name() + "\' wasn\'t found")
+                        () -> new EntityNotFoundException("Role with name '"
+                            + Role.RoleName.ROLE_USER.name() + "' wasn't found")
                     )
             )
         );
 
-        return userMapper.toDto(userRepository.save(newUser));
+        User createdUser = userRepository.save(newUser);
+        
+        shoppingCartService.create(createdUser);
+
+        return userMapper.toDto(createdUser);
     }
 }
