@@ -4,7 +4,6 @@ import com.book.store.bookstore.dto.request.cartitem.CartItemRequestDto;
 import com.book.store.bookstore.dto.response.cartitem.CartItemResponseDto;
 import com.book.store.bookstore.dto.response.shoppingcart.ShoppingCartResponseDto;
 import com.book.store.bookstore.exception.EntityNotFoundException;
-import com.book.store.bookstore.exception.ShoppingCartForbiddenException;
 import com.book.store.bookstore.mapper.CartItemMapper;
 import com.book.store.bookstore.mapper.ShoppingCartMapper;
 import com.book.store.bookstore.model.CartItem;
@@ -38,10 +37,21 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     @Transactional
     public ShoppingCartResponseDto addBook(Long userId, CartItemRequestDto requestDto) {
-        CartItem newCartItem = cartItemMapper.toModel(requestDto);
-        newCartItem.setShoppingCart(getShoppingCartByUserId(userId));
+        ShoppingCart shoppingCart = getShoppingCartByUserId(userId);
+        CartItem cartItem = cartItemRepository
+                .findByShoppingCartIdAndBookId(shoppingCart.getId(), requestDto.bookId())
+                .orElseGet(() -> {
+                    CartItem newCartItem = cartItemMapper.toModel(requestDto);
+                    newCartItem.setShoppingCart(shoppingCart);
 
-        cartItemRepository.save(newCartItem);
+                    return newCartItem;
+                });
+
+        if (cartItem.getId() != null) {
+            cartItem.setQuantity(cartItem.getQuantity() + requestDto.quantity());
+        }
+
+        cartItemRepository.save(cartItem);
 
         return shoppingCartMapper.toDto(getShoppingCartByUserId(userId));
     }
@@ -81,7 +91,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         );
 
         if (!cartItem.getShoppingCart().getId().equals(userId)) {
-            throw new ShoppingCartForbiddenException("Not your's shopping cart");
+            throw new EntityNotFoundException("Cart item with id '" + cartItemId 
+                                                + "' is not in your shopping cart");
         }
 
         return cartItem;

@@ -18,6 +18,8 @@ public interface BookRepository extends JpaRepository<Book, Long>,
 
     @Query("FROM Book b "
             + "LEFT JOIN FETCH b.categories c "
-            + "WHERE c.id = :categoryId")
+            + "WHERE c.id = :categoryId "
+            + "AND b.isDeleted = FALSE "
+            + "AND c.isDeleted = FALSE")
     Page<Book> findAllByCategoryId(Long categoryId, Pageable pageable);
 }
