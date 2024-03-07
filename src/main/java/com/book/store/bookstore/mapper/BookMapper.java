@@ -5,6 +5,9 @@ import com.book.store.bookstore.dto.request.book.BookRequestDto;
 import com.book.store.bookstore.dto.response.book.BookResponseDto;
 import com.book.store.bookstore.dto.response.book.BookWithoutCategoriesResponseDto;
 import com.book.store.bookstore.model.Book;
+import com.book.store.bookstore.model.Category;
+import java.util.List;
+import java.util.Set;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -14,12 +17,8 @@ import org.mapstruct.Named;
 public interface BookMapper {
     @Mapping(
             target = "categoryIds",
-            expression = "java("
-                + "book.getCategories()"
-                    + ".stream()"
-                    + ".map(category -> category.getId())"
-                    + ".toList()"
-            + ")"
+            source = "categories",
+            qualifiedByName = "getCategoryIds"
     )
     BookResponseDto toDto(Book book);
 
@@ -36,5 +35,12 @@ public interface BookMapper {
         return Book.builder()
                     .id(id)
                     .build();
+    }
+
+    @Named("getCategoryIds")
+    default List<Long> getCategoryIds(Set<Category> categories) {
+        return categories.stream()
+                            .map(Category::getId)
+                            .toList();
     }
 }
