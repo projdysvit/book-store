@@ -78,18 +78,17 @@ public class OrderServiceImpl implements OrderService {
                 .user(User.builder().id(id).build())
                 .status(Order.Status.PENDING)
                 .shippingAddress(requestDto.shippingAddress())
-                .total(
-                    shoppingCart.getCartItems()
-                            .stream()
-                            .map(
-                                cartItem -> cartItem.getBook()
-                                        .getPrice()
-                                        .multiply(BigDecimal.valueOf(cartItem.getQuantity()))
-                            )
-                            .reduce(BigDecimal.ZERO, BigDecimal::add)
-                )
+                .total(getTotalPrice(shoppingCart.getCartItems()))
                 .orderDate(LocalDateTime.now())
                 .build();
+    }
+
+    private BigDecimal getTotalPrice(Set<CartItem> cartItems) {
+        return cartItems.stream()
+                .map(cartItem -> cartItem.getBook()
+                        .getPrice()
+                        .multiply(BigDecimal.valueOf(cartItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private OrderItem convertToOrderItem(CartItem cartItem) {
